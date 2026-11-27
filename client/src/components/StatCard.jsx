@@ -1,25 +1,25 @@
-export default function StatCard({ label, value, unit, icon, color = 'lavender' }) {
-  const colorClasses = {
-    lavender: 'bg-lavender-50 text-lavender-700 border-lavender-200',
-    blue: 'bg-blue-50 text-blue-700 border-blue-200',
-    green: 'bg-green-50 text-green-700 border-green-200',
-    red: 'bg-red-50 text-red-700 border-red-200',
-    amber: 'bg-amber-50 text-amber-700 border-amber-200',
-  };
+export default function StatCard({ label, value, unit, icon: Icon }) {
+  const hasValue = value !== null && value !== undefined;
 
   return (
-    <div className={`rounded-xl border p-5 ${colorClasses[color] || colorClasses.lavender}`}>
-      <div className="flex items-center justify-between">
-        <div>
-          <p className="text-sm font-medium opacity-75">{label}</p>
-          <p className="text-2xl font-bold mt-1">
-            {value !== null && value !== undefined ? value : '—'}
-            {unit && value !== null && value !== undefined && (
-              <span className="text-sm font-normal ml-1">{unit}</span>
+    <div className="bg-white rounded-xl border border-[#E2E8F0] p-5 shadow-[var(--shadow-xs)]">
+      <div className="flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <p className="text-xs font-medium uppercase tracking-wider text-[#64748B]">
+            {label}
+          </p>
+          <p className="mt-2 text-2xl font-bold tracking-tight text-[#1E293B] tabular-nums">
+            {hasValue ? value : '—'}
+            {unit && hasValue && (
+              <span className="ml-1.5 text-xs font-medium text-[#64748B]">{unit}</span>
             )}
           </p>
         </div>
-        {icon && <span className="text-2xl">{icon}</span>}
+        {Icon && (
+          <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-[#F1F5F9] text-[#0E7490]">
+            <Icon className="h-4.5 w-4.5" aria-hidden="true" />
+          </div>
+        )}
       </div>
     </div>
   );
