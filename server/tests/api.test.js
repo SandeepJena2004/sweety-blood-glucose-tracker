@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeAll, afterAll, beforeEach } from 'vitest';
+import { describe, it, expect, beforeAll } from 'vitest';
 import request from 'supertest';
 import bcrypt from 'bcrypt';
 import app from '../src/app.js';
@@ -36,18 +36,6 @@ describe('Sweety API Tests', () => {
   let user2Token;
   let user2Id;
   let createdReadingId;
-
-  beforeAll(async () => {
-    // Clean test database
-    await prisma.reading.deleteMany();
-    await prisma.user.deleteMany();
-  });
-
-  afterAll(async () => {
-    await prisma.reading.deleteMany();
-    await prisma.user.deleteMany();
-    await prisma.$disconnect();
-  });
 
   // =================== AUTH TESTS ===================
 

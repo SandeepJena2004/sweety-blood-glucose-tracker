@@ -1,5 +1,43 @@
+import 'dotenv/config';
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcrypt';
+
+const ALLOWED_SEED_DB = 'sweety_db';
+
+/**
+ * Extract the database name from a PostgreSQL connection URL.
+ */
+function extractDatabaseName(url) {
+  try {
+    const parsed = new URL(url.replace(/^postgresql(s?):\/\//, 'http$1://'));
+    return parsed.pathname.slice(1) || null;
+  } catch {
+    return null;
+  }
+}
+
+// Guard 1: Never seed when running in the test environment
+if (process.env.NODE_ENV === 'test') {
+  console.error('✖  Seed script must not run with NODE_ENV=test. Aborting.');
+  process.exit(1);
+}
+
+// Guard 2: Verify DATABASE_URL points to the development database only
+const seedUrl = process.env.DATABASE_URL;
+if (!seedUrl) {
+  console.error('✖  DATABASE_URL is not set. Cannot seed without a database connection.');
+  process.exit(1);
+}
+
+const seedDbName = extractDatabaseName(seedUrl);
+if (seedDbName !== ALLOWED_SEED_DB) {
+  console.error(
+    `✖  DATABASE_URL points to database "${seedDbName}" but the seed script ` +
+    `is only allowed to target "${ALLOWED_SEED_DB}".\n` +
+    '   This prevents accidentally seeding (and wiping) the test or production database.'
+  );
+  process.exit(1);
+}
 
 const prisma = new PrismaClient();
 
